@@ -1,10 +1,10 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import Link from "next/link";
 import {
   Search, Star, MapPin, Heart,
   Compass, Landmark, UtensilsCrossed, TreePine, Mountain,
-  Waves, Sparkles, Music, Dumbbell, Crown, Lock, Ship
+  Sparkles, Music, Dumbbell, Crown, Lock, Ship
 } from "lucide-react";
 import styles from "./ExperiencesPage.module.css";
 import Footer from "./Footer";
@@ -47,7 +47,7 @@ const EXPERIENCES = [
   { id: 19, title: "Kayak & Snorkeling Expedition", category: "sea", location: "Madeira, Portugal", price: 55, unit: "Person", image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=400&fit=crop" },
 ];
 
-function CardRow({ items }) {
+function CardRow({ items, favorites, onToggleFav }) {
   const ref = useRef(null);
   const scroll = (dir) => {
     if (ref.current) ref.current.scrollBy({ left: dir * 300, behavior: "smooth" });
@@ -57,20 +57,26 @@ function CardRow({ items }) {
     <div className={styles.rowWrapper}>
       <button className={`${styles.scrollBtn} ${styles.scrollLeft}`} onClick={() => scroll(-1)}>‹</button>
       <div className={styles.row} ref={ref}>
-        {items.map(exp => (
-          <Link href={`/experience/${exp.id}`} key={exp.id} className={styles.card}>
-            <div className={styles.cardImage}>
-              <img src={exp.image} alt={exp.title} />
-              <button className={styles.fav} onClick={e => e.preventDefault()}>
-                <Heart size={16} />
-              </button>
-              <span className={styles.badge}>Top Picks</span>
-            </div>
-            <h3>{exp.title}</h3>
-            <p className={styles.location}><MapPin size={12} /> {exp.location}</p>
-            <p className={styles.price}>From <strong>{exp.price} €</strong> / {exp.unit}</p>
-          </Link>
-        ))}
+        {items.map(exp => {
+          const isFav = favorites.includes(exp.id);
+          return (
+            <Link href={`/experience/${exp.id}`} key={exp.id} className={styles.card}>
+              <div className={styles.cardImage}>
+                <img src={exp.image} alt={exp.title} />
+                <button
+                  className={`${styles.fav} ${isFav ? styles.favActive : ""}`}
+                  onClick={e => { e.preventDefault(); e.stopPropagation(); onToggleFav(exp.id); }}
+                >
+                  <Heart size={16} fill={isFav ? "#ef4444" : "none"} stroke={isFav ? "#ef4444" : "currentColor"} />
+                </button>
+                <span className={styles.badge}>Top Picks</span>
+              </div>
+              <h3>{exp.title}</h3>
+              <p className={styles.location}><MapPin size={12} /> {exp.location}</p>
+              <p className={styles.price}>From <strong>{exp.price} €</strong> / {exp.unit}</p>
+            </Link>
+          );
+        })}
       </div>
       <button className={`${styles.scrollBtn} ${styles.scrollRight}`} onClick={() => scroll(1)}>›</button>
     </div>
@@ -78,20 +84,66 @@ function CardRow({ items }) {
 }
 
 export default function ExperiencesPage() {
-  const [activeCat, setActiveCat] = useState("top");
+  const [activeCat, setActiveCat] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [favorites, setFavorites] = useState([]);
 
-  const sections = CATEGORIES.filter(c =>
-    EXPERIENCES.some(e => e.category === c.id)
-  );
+  const toggleFav = (id) => {
+    setFavorites(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]);
+  };
+
+  const filtered = useMemo(() => {
+    let items = EXPERIENCES;
+    if (activeCat) {
+      items = items.filter(e => e.category === activeCat);
+    }
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      items = items.filter(e =>
+        e.title.toLowerCase().includes(q) ||
+        e.location.toLowerCase().includes(q) ||
+        e.category.toLowerCase().includes(q)
+      );
+    }
+    return items;
+  }, [activeCat, searchQuery]);
+
+  const sections = useMemo(() => {
+    if (activeCat) {
+      const cat = CATEGORIES.find(c => c.id === activeCat);
+      const items = filtered.filter(e => e.category === activeCat);
+      return items.length > 0 ? [{ ...cat, items }] : [];
+    }
+    return CATEGORIES
+      .map(c => ({ ...c, items: filtered.filter(e => e.category === c.id) }))
+      .filter(s => s.items.length > 0);
+  }, [activeCat, filtered]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setSearchQuery(searchInput);
+    setActiveCat(null);
+  };
+
+  const clearFilters = () => {
+    setActiveCat(null);
+    setSearchQuery("");
+    setSearchInput("");
+  };
 
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        <span className={styles.logo}>Madeira Friends</span>
-        <div className={styles.searchBar}>
+        <span className={styles.logo} onClick={clearFilters} style={{ cursor: "pointer" }}>Madeira Friends</span>
+        <form className={styles.searchBar} onSubmit={handleSearch}>
           <div className={styles.searchField}>
             <label>Where</label>
-            <input placeholder="Search destination" />
+            <input
+              placeholder="Search destination"
+              value={searchInput}
+              onChange={e => setSearchInput(e.target.value)}
+            />
           </div>
           <div className={styles.divider} />
           <div className={styles.searchField}>
@@ -103,8 +155,8 @@ export default function ExperiencesPage() {
             <label>Who</label>
             <input placeholder="Add guests" />
           </div>
-          <button className={styles.searchBtn}><Search size={18} /></button>
-        </div>
+          <button type="submit" className={styles.searchBtn}><Search size={18} /></button>
+        </form>
         <div className={styles.headerRight}>
           <span>Sign In</span>
           <button className={styles.registerBtn}>Register</button>
@@ -118,7 +170,7 @@ export default function ExperiencesPage() {
             <button
               key={c.id}
               className={activeCat === c.id ? styles.pillActive : styles.pill}
-              onClick={() => setActiveCat(c.id)}
+              onClick={() => setActiveCat(activeCat === c.id ? null : c.id)}
             >
               <Icon size={14} /> {c.label}
             </button>
@@ -126,21 +178,38 @@ export default function ExperiencesPage() {
         })}
       </div>
 
+      {(searchQuery || activeCat) && (
+        <div className={styles.filterBar}>
+          <p>
+            {filtered.length} experience{filtered.length !== 1 ? "s" : ""} found
+            {searchQuery && <> for <strong>"{searchQuery}"</strong></>}
+            {activeCat && <> in <strong>{CATEGORIES.find(c => c.id === activeCat)?.label}</strong></>}
+          </p>
+          <button className={styles.clearBtn} onClick={clearFilters}>Clear filters</button>
+        </div>
+      )}
+
       <main className={styles.main}>
-        {sections.map((section, i) => {
-          const items = EXPERIENCES.filter(e => e.category === section.id);
-          return (
+        {sections.length === 0 ? (
+          <div className={styles.empty}>
+            <p className={styles.emptyIcon}>🏝</p>
+            <h3>No experiences found</h3>
+            <p>Try a different search or category</p>
+            <button className={styles.clearBtn} onClick={clearFilters}>Clear all filters</button>
+          </div>
+        ) : (
+          sections.map((section, i) => (
             <AnimatedSection key={section.id} delay={i * 100}>
               <section className={styles.section}>
                 <div className={styles.sectionHeader}>
                   <h2>{section.label}</h2>
                   <Link href={`/category/${section.id}`} className={styles.seeMore}>See more</Link>
                 </div>
-                <CardRow items={items} />
+                <CardRow items={section.items} favorites={favorites} onToggleFav={toggleFav} />
               </section>
             </AnimatedSection>
-          );
-        })}
+          ))
+        )}
       </main>
 
       <Footer />
