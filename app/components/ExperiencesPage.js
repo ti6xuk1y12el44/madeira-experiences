@@ -158,8 +158,10 @@ export default function ExperiencesPage() {
           <button type="submit" className={styles.searchBtn}><Search size={18} /></button>
         </form>
         <div className={styles.headerRight}>
-          <span>Sign In</span>
-          <button className={styles.registerBtn}>Register</button>
+          <Link href="/login" style={{ color: "inherit", textDecoration: "none" }}>Sign In</Link>
+          <Link href="/register">
+            <button className={styles.registerBtn}>Register</button>
+          </Link>
         </div>
       </header>
 
@@ -182,7 +184,7 @@ export default function ExperiencesPage() {
         <div className={styles.filterBar}>
           <p>
             {filtered.length} experience{filtered.length !== 1 ? "s" : ""} found
-            {searchQuery && <> for <strong>"{searchQuery}"</strong></>}
+            {searchQuery && <> for <strong>&quot;{searchQuery}&quot;</strong></>}
             {activeCat && <> in <strong>{CATEGORIES.find(c => c.id === activeCat)?.label}</strong></>}
           </p>
           <button className={styles.clearBtn} onClick={clearFilters}>Clear filters</button>
@@ -192,7 +194,6 @@ export default function ExperiencesPage() {
       <main className={styles.main}>
         {sections.length === 0 ? (
           <div className={styles.empty}>
-            <p className={styles.emptyIcon}>🏝</p>
             <h3>No experiences found</h3>
             <p>Try a different search or category</p>
             <button className={styles.clearBtn} onClick={clearFilters}>Clear all filters</button>

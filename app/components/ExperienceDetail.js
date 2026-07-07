@@ -6,6 +6,7 @@ import {
   Clock, Users, Mic, Bus, ChevronLeft, ChevronRight
 } from "lucide-react";
 import styles from "./ExperienceDetail.module.css";
+import Footer from "./Footer";
 
 const MOCK = {
   title: "Funchal: Swimming with Dolphins & Dolphin & Whale Watching",
@@ -40,17 +41,19 @@ export default function ExperienceDetail({ id }) {
     <div className={styles.page}>
       <header className={styles.header}>
         <Link href="/" className={styles.logo}>Madeira Friends</Link>
-        <div className={styles.searchBar}>
+        <form className={styles.searchBar} onSubmit={e => e.preventDefault()}>
           <div className={styles.searchField}><label>Where</label><input placeholder="Search destination" /></div>
           <div className={styles.divider} />
           <div className={styles.searchField}><label>Dates</label><input placeholder="Add dates" /></div>
           <div className={styles.divider} />
           <div className={styles.searchField}><label>Who</label><input placeholder="Add guests" /></div>
-          <button className={styles.searchBtn}><Search size={18} /></button>
-        </div>
+          <button type="submit" className={styles.searchBtn}><Search size={18} /></button>
+        </form>
         <div className={styles.headerRight}>
-          <span>Sign In</span>
-          <button className={styles.registerBtn}>Register</button>
+          <Link href="/login" style={{ color: "inherit", textDecoration: "none" }}>Sign In</Link>
+          <Link href="/register">
+            <button className={styles.registerBtn}>Register</button>
+          </Link>
         </div>
       </header>
 
@@ -58,8 +61,8 @@ export default function ExperienceDetail({ id }) {
         <div className={styles.gallery}>
           <div className={styles.mainImage}>
             <img src={exp.images[mainImg]} alt={exp.title} />
-            <button className={styles.navBtn + " " + styles.navLeft} onClick={prevImg}><ChevronLeft size={20} /></button>
-            <button className={styles.navBtn + " " + styles.navRight} onClick={nextImg}><ChevronRight size={20} /></button>
+            <button className={`${styles.navBtn} ${styles.navLeft}`} onClick={prevImg}><ChevronLeft size={20} /></button>
+            <button className={`${styles.navBtn} ${styles.navRight}`} onClick={nextImg}><ChevronRight size={20} /></button>
           </div>
           <div className={styles.thumbs}>
             {exp.images.map((img, i) => (
@@ -114,6 +117,8 @@ export default function ExperienceDetail({ id }) {
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }
