@@ -1,0 +1,361 @@
+.page {
+  --primary: #16803C;
+  --primary-light: #ECFDF3;
+  --primary-dark: #116B32;
+  --dark: #111827;
+  --gray: #6B7280;
+  --light-gray: #F9FAFB;
+  --border: #E5E7EB;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #fff;
+  min-height: 100vh;
+  color: var(--dark);
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 40px;
+  border-bottom: 1px solid var(--border);
+  gap: 24px;
+}
+.logo {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--primary);
+  white-space: nowrap;
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 40px;
+  padding: 4px 4px 4px 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  flex: 0 1 580px;
+  transition: box-shadow 0.3s, border-color 0.3s;
+}
+.searchBar:focus-within {
+  box-shadow: 0 2px 16px rgba(22, 128, 60, 0.2);
+  border-color: var(--primary);
+}
+.searchField {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 16px;
+}
+.searchField label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--dark);
+}
+.searchField input {
+  border: none;
+  outline: none;
+  font-size: 13px;
+  color: var(--gray);
+  background: transparent;
+  width: 120px;
+}
+.divider {
+  width: 1px;
+  height: 32px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+.searchBtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  transition: background 0.2s, transform 0.2s;
+}
+.searchBtn:hover {
+  background: var(--primary-dark);
+  transform: scale(1.05);
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.registerBtn {
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--primary);
+  background: transparent;
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s, color 0.2s;
+}
+.registerBtn:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* PILLS */
+.pills {
+  display: flex;
+  gap: 10px;
+  padding: 16px 40px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--border);
+}
+.pills::-webkit-scrollbar {
+  display: none;
+}
+.pill,
+.pillActive {
+  padding: 8px 18px;
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--gray);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.pill:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(22, 128, 60, 0.15);
+}
+.pillActive {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+/* MAIN */
+.main {
+  padding: 0 40px 60px;
+}
+.section {
+  margin-top: 36px;
+}
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.sectionHeader h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--dark);
+}
+.seeMore {
+  color: var(--gray);
+  font-size: 14px;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.seeMore:hover {
+  color: var(--primary);
+}
+
+/* ROW */
+.rowWrapper {
+  position: relative;
+}
+.row {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding-bottom: 8px;
+}
+.row::-webkit-scrollbar {
+  display: none;
+}
+.scrollBtn {
+  position: absolute;
+  top: 35%;
+  z-index: 10;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid var(--border);
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.scrollBtn:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: scale(1.1);
+}
+.scrollLeft {
+  left: -18px;
+}
+.scrollRight {
+  right: -18px;
+}
+
+/* CARD */
+.card {
+  flex: 0 0 200px;
+  scroll-snap-align: start;
+  text-decoration: none;
+  color: inherit;
+  opacity: 0;
+  animation: cardIn 0.5s ease forwards;
+}
+.card:nth-child(1) { animation-delay: 0s; }
+.card:nth-child(2) { animation-delay: 0.05s; }
+.card:nth-child(3) { animation-delay: 0.1s; }
+.card:nth-child(4) { animation-delay: 0.15s; }
+.card:nth-child(5) { animation-delay: 0.2s; }
+.card:nth-child(6) { animation-delay: 0.25s; }
+.card:nth-child(7) { animation-delay: 0.3s; }
+.card:nth-child(8) { animation-delay: 0.35s; }
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.cardImage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.cardImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+.card:hover .cardImage img {
+  transform: scale(1.05);
+}
+
+.badge {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: var(--primary);
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  animation: badgePulse 2s ease-in-out infinite;
+}
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(22, 128, 60, 0.3); }
+  50% { box-shadow: 0 0 0 6px rgba(22, 128, 60, 0); }
+}
+
+.fav {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+}
+.fav:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.15);
+}
+
+.card h3 {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 0 0 4px;
+  color: var(--dark);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.location {
+  font-size: 12px;
+  color: var(--gray);
+  margin: 0 0 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.price {
+  font-size: 13px;
+  color: var(--gray);
+  margin: 0;
+}
+.price strong {
+  color: var(--dark);
+  font-weight: 700;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .header {
+    flex-wrap: wrap;
+    padding: 12px 16px;
+    gap: 12px;
+  }
+  .searchBar {
+    flex: 1 1 100%;
+    order: 3;
+  }
+  .headerRight {
+    display: none;
+  }
+  .pills {
+    padding: 12px 16px;
+  }
+  .main {
+    padding: 0 16px 40px;
+  }
+  .card {
+    flex: 0 0 160px;
+  }
+  .scrollBtn {
+    display: none;
+  }
+}
